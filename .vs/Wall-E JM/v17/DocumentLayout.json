@@ -1,0 +1,102 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7BBF27B4-7C83-4900-AF04-04028A15806E}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\language\\expresion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7BBF27B4-7C83-4900-AF04-04028A15806E}|Core\\Core.csproj|solutionrelative:core\\language\\expresion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4560EE49-04B9-4696-A2E9-7F5DE59F2B78}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "ViewModel\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\MainWindow.xaml",
+              "RelativeToolTip": "ViewModel\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-04-12T21:59:25.756Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Expresion.cs",
+              "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Language\\Expresion.cs",
+              "RelativeDocumentMoniker": "Core\\Language\\Expresion.cs",
+              "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Language\\Expresion.cs",
+              "RelativeToolTip": "Core\\Language\\Expresion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T02:11:42.163Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "ViewModel\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\MainWindow.xaml.cs",
+              "RelativeToolTip": "ViewModel\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T02:11:55.771Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "ViewModel\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\AssemblyInfo.cs",
+              "RelativeToolTip": "ViewModel\\AssemblyInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T02:07:00.575Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\App.xaml",
+              "RelativeDocumentMoniker": "ViewModel\\App.xaml",
+              "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\App.xaml",
+              "RelativeToolTip": "ViewModel\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-04-19T02:05:43.759Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
