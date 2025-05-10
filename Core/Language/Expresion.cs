@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Core.Language;
 
-namespace Core.Language
+public interface IInstruction
 {
-    public abstract class Expresion
-    {
-        public abstract void Accept();
-    }
+    void Execute();
+}
+
+public interface IExpression<T>
+{
+    T Execute();
 }

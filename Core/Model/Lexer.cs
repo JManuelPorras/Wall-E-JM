@@ -7,13 +7,20 @@ public class Lexer
 {
     public static string GetContentPath()
     {
-        var path = Environment.CurrentDirectory;
-
+        string path;
 #if DEBUG
-        DirectoryInfo directory = new(path);
-        path = directory!.Parent!.Parent!.Parent!.Parent!.FullName;
+        // En modo DEBUG, subimos desde el directorio de ejecución hasta la raíz del proyecto
+        var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+        path = directory
+            .Parent? // bin
+            .Parent? // Debug
+            .Parent? // netX.Y
+            .Parent? // proyecto
+            .FullName!;
+#else
+        // En Release usamos el directorio base normal
+        path = AppDomain.CurrentDomain.BaseDirectory;
 #endif
-
         return Path.Combine(path, "contents");
     }
 
