@@ -9,11 +9,11 @@ public class BlockInstruction : IInstruction
         Lines = lines;
     }
 
-    public void Execute()
+    void IInstruction.Execute(Context context)
     {
         foreach (var item in Lines)
         {
-            item.Execute();
+            item.Execute(context);
         }
     }
 }

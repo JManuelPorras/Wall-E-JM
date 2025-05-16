@@ -9,5 +9,5 @@ public class Literal<T> : IExpression<T>
 
     public T Value { get; }
 
-    public T Execute() => Value;
+    public T Execute(Context context) => Value;
 }

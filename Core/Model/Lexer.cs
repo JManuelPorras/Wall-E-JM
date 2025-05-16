@@ -43,29 +43,74 @@ public class Lexer
         {"+", TokenType.Suma},
         {"*", TokenType.Multiplicacion},
         {"/", TokenType.Division},
-        {"=", TokenType.Igualdad},
         {"(", TokenType.ParentesisAbierto},
         {")", TokenType.ParentesisCerrado},
+        {"<", TokenType.MenorQue},
+        {">", TokenType.MayorQue},
+        {"%", TokenType.Modulo},
+        {"&", TokenType.MediaConjuncion},
+        {"|", TokenType.MediaDisyuncion},
+        {",", TokenType.Coma}
+    };
+
+    public static readonly Dictionary<string, TokenType> DoubleDelimiters = new()
+    {
+        {"<=", TokenType.MenorOIgual},
+        {">=", TokenType.MayorOIgual},
+        {"==", TokenType.Igualdad},
+        {"&&", TokenType.Conjuncion},
+        {"||", TokenType.Disyuncion}
     };
 
     public static readonly Dictionary<string, TokenType> KeyWords = new()
     {
-        {"+", TokenType.Suma},
-        {"*", TokenType.Multiplicacion},
-        {"/", TokenType.Division},
-        {"=", TokenType.Igualdad},
-        {"(", TokenType.ParentesisAbierto},
-        {")", TokenType.ParentesisCerrado},
+        {"GoTo", TokenType.Jump},
         {"True", TokenType.Bool},
         {"False", TokenType.Bool}
     };
+
+    public static readonly Dictionary<string, TokenType> ArithmeticsExp = new()
+    {
+        {"+", TokenType.Suma},
+        {"*", TokenType.Multiplicacion},
+        {"/", TokenType.Division},
+        {"**", TokenType.Potencia},
+        {"%", TokenType.Modulo},
+
+    };
+
+    public static readonly Dictionary<string, TokenType> BooleanExp = new()
+    {
+        {"<=", TokenType.MenorOIgual},
+        {">=", TokenType.MayorOIgual},
+        {"==", TokenType.Igualdad},
+        {"&&", TokenType.Conjuncion},
+        {"||", TokenType.Disyuncion}
+
+    };
+
+    public static readonly Dictionary<string, TokenType> Colores = new()
+    {
+        {"Red", TokenType.Color},
+        {"Blue", TokenType.Color},
+        {"Green", TokenType.Color},
+        {"Yelow", TokenType.Color},
+        {"Orange", TokenType.Color},
+        {"Purple", TokenType.Color},
+        {"Black", TokenType.Color},
+        {"White", TokenType.Color},
+        {"Transparent", TokenType.Color},
+
+    };
+
+
+    static List<Token> tokens = [];
+    static StringBuilder builder = new();
 
     //esto tokeniza
     public static List<Token> Tokenizer(string[] lines)
     {
 
-        List<Token> tokens = [];
-        StringBuilder builder = new();
 
         for (int i = 0; i < lines.Length; i++)
         {
@@ -74,12 +119,12 @@ public class Lexer
                 string a = builder.ToString();
 
                 string currentCharacter = lines[i][k].ToString();
-                // if (currentCharacter == "\"")
-                // {
-                //     TextReader1(lines, ref i, ref k, tokens, ref builder);
-                //     continue;
+                if (currentCharacter == "\"")
+                {
+                    TextReader1(lines, ref i, ref k, tokens, ref builder);
+                    continue;
 
-                // }
+                }
                 if (k == lines[i].Length - 1)
                 {
                     builder.Append(lines[i][k]);
@@ -87,11 +132,11 @@ public class Lexer
                 }
                 if (a.Length == lines[i].Length)
                 {
-                    Token token = new(a, TokenType.Etiqueta, 0, i);
-                    tokens.Add(token);
-                    builder.Clear();
+                    AddToken(a, TokenType.Etiqueta, 0, i);
                     break;
                 }
+
+                //revisa si es un numero y lo agrega
                 if (int.TryParse(currentCharacter, out var result) && builder.Length == 0)
                 {
                     NumReader(lines, i, ref k, tokens, result);
@@ -101,9 +146,7 @@ public class Lexer
 
                 if (currentCharacter == "-" && builder.Length == 0)
                 {
-                    Token token = new("-", TokenType.Resta, k, i);
-                    tokens.Add(token);
-                    builder.Clear();
+                    AddToken("-", TokenType.Resta, k, i);
                     continue;
                 }
 
@@ -113,23 +156,19 @@ public class Lexer
 
                     if (KeyWords.TryGetValue(a, out TokenType value))
                     {
-                        Token token = new(a, value, k - a.Length, i);
-                        tokens.Add(token);
-                        builder.Clear();
-
+                        AddToken(a, value, k - a.Length, i);
                     }
 
                     else if (a != "")
                     {
-                        Token token = new(a, TokenType.Identificador, k - a.Length, i);
-                        tokens.Add(token);
-                        builder.Clear();
+                        AddToken(a, TokenType.Identificador, k - a.Length, i);
                     }
 
-                    if (KeyWords.TryGetValue(currentCharacter, out TokenType type))
+                    if (Delimiter.TryGetValue(currentCharacter, out TokenType type))
                     {
-                        Token token1 = new(currentCharacter, type, k, i);
-                        tokens.Add(token1);
+                        if (TryDoubleCaracter(lines, currentCharacter, ref k, i)) ;
+                        else
+                            AddToken(currentCharacter, type, k, i);
                     }
 
                     //esto es por si se me olvida poner un delimitador en las palabras clave,
@@ -138,14 +177,41 @@ public class Lexer
                 }
 
                 //si no sigue acumulando caracteres
-                else
-                {
+                else if (char.IsLetterOrDigit(lines[i][k]) || lines[i][k] == '-')
                     builder.Append(lines[i][k]);
-                }
+                else throw new InvalidDataException("Se esperaba una letra, un numero o '-'.");
 
             }
+            AddToken("EndOfFile", TokenType.EndOfFile, lines[i].Length, i);
         }
         return tokens;
+    }
+
+    private static bool TryDoubleCaracter(string[] lines, string currentCharacter, ref int k, int i)
+    {
+        StringBuilder builder1 = new();
+        builder1.Append(currentCharacter);
+        if (k != lines[i].Length - 1)
+        {
+            builder1.Append(lines[i][k].ToString());
+            string a = builder1.ToString();
+            if (DoubleDelimiters.TryGetValue(a, out TokenType value))
+            {
+                AddToken(a, value, k, i);
+                k += 1;
+                return true;
+            }
+            else return false;
+        }
+        else return false;
+
+    }
+
+    private static void AddToken(string name, TokenType tokenType, int col, int row)
+    {
+        Token token = new(name, tokenType, col, row);
+        tokens.Add(token);
+        builder.Clear();
     }
 
     private static void NumReader(string[] lines, int i, ref int k, List<Token> tokens, int result)
@@ -173,33 +239,33 @@ public class Lexer
 
     }
 
-    // private static void TextReader1(string[] lines, ref int i, ref int k, List<Token> tokens, ref StringBuilder builder)
-    // {
-    //     StringBuilder builder1 = new();
+    private static void TextReader1(string[] lines, ref int i, ref int k, List<Token> tokens, ref StringBuilder builder)
+    {
+        StringBuilder builder1 = new();
 
-    //     //esto va hasta el final de la linea, si no ha encontrado otra comilla salta de linea
-    //     for (int m = i; m < lines.Length; m++)
-    //     {
-    //         for (int n = m == i ? k + 1 : 0; n < lines[i].Length; n++)
-    //         {
-    //             if (lines[m][n].ToString() == "\"")
-    //             {
+        //esto va hasta el final de la linea, si no ha encontrado otra comilla salta de linea
+        for (int m = i; m < lines.Length; m++)
+        {
+            for (int n = m == i ? k + 1 : 0; n < lines[i].Length; n++)
+            {
+                if (lines[m][n].ToString() == "\"")
+                {
 
-    //                 string b = builder1.ToString();
-    //                 Token token = new(b, TokenType.String, k + 1, i);
-    //                 tokens.Add(token);
-    //                 builder.Clear();
-    //                 k = n;
-    //                 i = m;
-    //                 return;
-    //             }
-    //             else
-    //             {
-    //                 builder1.Append(lines[m][n]);
-    //             }
-    //         }
-    //     }
-    //     // aqui tengo que lanzar un error que si llegue al final y no encontre otra comilla
-    //     // es pq el string se abrio y no se cerro
-    // }
+                    string b = builder1.ToString();
+                    Token token = new(b, TokenType.String, k + 1, i);
+                    tokens.Add(token);
+                    builder.Clear();
+                    k = n;
+                    i = m;
+                    return;
+                }
+                else
+                {
+                    builder1.Append(lines[m][n]);
+                }
+            }
+        }
+        // aqui tengo que lanzar un error que si llegue al final y no encontre otra comilla
+        // es pq el string se abrio y no se cerro
+    }
 }

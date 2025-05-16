@@ -18,10 +18,21 @@ public enum TokenType
     TipoDeDato,
     Comilla,
     Asignador,
-    Comparador,
     OperadorLogico,
     CorcheteAbierto,
     CorcheteCerrado,
-    Etiqueta
-
+    Etiqueta,
+    Potencia,
+    Modulo,
+    MenorQue,
+    MayorQue,
+    Conjuncion,
+    Disyuncion,
+    Remitente,
+    Jump,
+    MayorOIgual,
+    MenorOIgual,
+    MediaConjuncion,
+    MediaDisyuncion,
+    Color
 }
