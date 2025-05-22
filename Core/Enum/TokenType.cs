@@ -11,7 +11,7 @@ public enum TokenType
     ParentesisCerrado,
     Coma,
     Igualdad,
-    EndOfFile,
+    EndOfLine,
     Numero,
     Bool,
     String,
@@ -34,5 +34,6 @@ public enum TokenType
     MenorOIgual,
     MediaConjuncion,
     MediaDisyuncion,
-    Color
+    Color,
+    EndOfFile
 }

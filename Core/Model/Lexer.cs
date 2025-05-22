@@ -1,9 +1,10 @@
+using System.ComponentModel;
 using System.Text;
 using Core.Enum;
 
 namespace Core.Model;
 
-public class Lexer
+public static class Lexer
 {
     public static string GetContentPath()
     {
@@ -50,7 +51,10 @@ public class Lexer
         {"%", TokenType.Modulo},
         {"&", TokenType.MediaConjuncion},
         {"|", TokenType.MediaDisyuncion},
-        {",", TokenType.Coma}
+        {",", TokenType.Coma},
+        {"[", TokenType.CorcheteAbierto},
+        {"]", TokenType.CorcheteCerrado},
+        {"=", TokenType.Igualdad}
     };
 
     public static readonly Dictionary<string, TokenType> DoubleDelimiters = new()
@@ -59,7 +63,9 @@ public class Lexer
         {">=", TokenType.MayorOIgual},
         {"==", TokenType.Igualdad},
         {"&&", TokenType.Conjuncion},
-        {"||", TokenType.Disyuncion}
+        {"||", TokenType.Disyuncion},
+        {"<-", TokenType.Asignador},
+
     };
 
     public static readonly Dictionary<string, TokenType> KeyWords = new()
@@ -114,6 +120,7 @@ public class Lexer
 
         for (int i = 0; i < lines.Length; i++)
         {
+            if (lines[i] == "") continue;
             for (int k = 0; k < lines[i].Length; k++)
             {
                 string a = builder.ToString();
@@ -166,7 +173,8 @@ public class Lexer
 
                     if (Delimiter.TryGetValue(currentCharacter, out TokenType type))
                     {
-                        if (TryDoubleCaracter(lines, currentCharacter, ref k, i)) ;
+                        if (TryDoubleCaracter(lines, currentCharacter, ref k, i))
+                        { }
                         else
                             AddToken(currentCharacter, type, k, i);
                     }
@@ -177,13 +185,14 @@ public class Lexer
                 }
 
                 //si no sigue acumulando caracteres
-                else if (char.IsLetterOrDigit(lines[i][k]) || lines[i][k] == '-')
+                else if (char.IsLetterOrDigit(lines[i][k]) || lines[i][k] == '_')
                     builder.Append(lines[i][k]);
-                else throw new InvalidDataException("Se esperaba una letra, un numero o '-'.");
+                else throw new InvalidDataException("Se esperaba una letra, un numero o '_'.");
 
             }
-            AddToken("EndOfFile", TokenType.EndOfFile, lines[i].Length, i);
+            if (i != lines.Length - 1) AddToken("EndOfLine", TokenType.EndOfLine, lines[i].Length, i);
         }
+        AddToken("EndOfFile", TokenType.EndOfFile, lines.Length - 1, lines[lines.Length - 1].Length - 1);
         return tokens;
     }
 
@@ -193,15 +202,19 @@ public class Lexer
         builder1.Append(currentCharacter);
         if (k != lines[i].Length - 1)
         {
+            k += 1;
             builder1.Append(lines[i][k].ToString());
             string a = builder1.ToString();
             if (DoubleDelimiters.TryGetValue(a, out TokenType value))
             {
                 AddToken(a, value, k, i);
-                k += 1;
                 return true;
             }
-            else return false;
+            else
+            {
+                k -= 1;
+                return false;
+            }
         }
         else return false;
 
@@ -252,7 +265,9 @@ public class Lexer
                 {
 
                     string b = builder1.ToString();
-                    Token token = new(b, TokenType.String, k + 1, i);
+                    if (!Colores.ContainsKey(b))
+                        throw new InvalidEnumArgumentException("Se esperaba un color valido en esta cadena de texto");
+                    Token token = new(b, TokenType.Color, k + 1, i);
                     tokens.Add(token);
                     builder.Clear();
                     k = n;
@@ -266,6 +281,7 @@ public class Lexer
             }
         }
         // aqui tengo que lanzar un error que si llegue al final y no encontre otra comilla
-        // es pq el string se abrio y no se cerro
+        //TODO es pq el string se abrio y no se cerro
+        //TODO manejar los errores del lexer y parser
     }
 }

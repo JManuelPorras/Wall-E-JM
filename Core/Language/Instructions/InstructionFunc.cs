@@ -1,16 +1,28 @@
+using System.Reflection;
+using Core.Errors;
+using Core.Interface;
+
 namespace Core.Language;
 
-public class InstructionFunc : IInstruction
+public class InstructionFunc : Function, IInstruction, ICheckSemantic
 {
-    public InstructionFunc(string name, params object[] @params)
+    public InstructionFunc(string name, params string[] @params) : base(name, @params)
     {
-        Name = name;
-        Params = @params;
+
     }
 
-    public string Name { get; }
-    public object[] Params { get; }
+    public IEnumerable<SemanticErrors>? CheckSemantic(Context context)
+    {
+        if (!context.FunInst.ContainsKey(Name))
+            yield return new SemanticErrors("Esta funcion no esta definida en el contexto actual");
+        else if (!MatchParams(context.FunInst[Name].Item2, out IEnumerable<SemanticErrors> errors, context))
+        {
+            foreach (var item in errors)
+                yield return item;
+        }
+    }
 
-    //tengo que implementar esto todavia
+
+    // TODO tengo que implementar esto todavia
     public void Execute(Context context) => throw new NotImplementedException();
 }

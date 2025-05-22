@@ -1,8 +1,10 @@
 using Core.Enum;
+using Core.Errors;
+using Core.Interface;
 
 namespace Core.Language;
 
-public class BinaryBoolExpression : BinaryExpression<bool, bool>, IExpression<bool>
+public class BinaryBoolExpression : BinaryExpression<bool, bool>, IExpression<bool>, ICheckSemantic
 {
     public BinaryBoolExpression(IExpression<bool> left, IExpression<bool> right, TokenType type) : base(left, right, type)
     {
@@ -21,5 +23,6 @@ public class BinaryBoolExpression : BinaryExpression<bool, bool>, IExpression<bo
                 throw new NotImplementedException();
         }
     }
+
 }
 

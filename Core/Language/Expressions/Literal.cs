@@ -1,13 +1,16 @@
+using Core.Errors;
+using Core.Interface;
+
 namespace Core.Language;
 
-public class Literal<T> : IExpression<T>
+public class Literal<T>(T value) : IExpression<T>, ICheckSemantic
 {
-    public Literal(T value)
-    {
-        Value = value;
-    }
+    public T Value { get; } = value;
 
-    public T Value { get; }
+    public IEnumerable<SemanticErrors>? CheckSemantic(Context context)
+    {
+        return default;
+    }
 
     public T Execute(Context context) => Value;
 }

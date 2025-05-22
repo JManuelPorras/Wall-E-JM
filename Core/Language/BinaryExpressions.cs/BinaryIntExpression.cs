@@ -1,4 +1,5 @@
 using Core.Enum;
+using Core.Interface;
 
 namespace Core.Language;
 
@@ -10,7 +11,6 @@ public class BinaryIntExpression : BinaryExpression<int, int>, IExpression<int>
 
     public override int Execute(Context context)
     {
-        //tengo que quitar este switch y hacerlo por clases que hereden
         switch (Type)
         {
             case TokenType.Suma:

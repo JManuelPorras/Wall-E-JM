@@ -1,5 +1,8 @@
 using Core.Enum;
+using Core.Interface;
 using Core.Language;
+using Core.Language.Instructions;
+using System.Data;
 using System.Text;
 
 namespace Core.Model;
@@ -22,6 +25,7 @@ public class Parser
      };
 
     private int tokenIndex;
+
     public IInstruction Parse(Token[] tokens)
     {
         tokenIndex = 0;
@@ -31,18 +35,64 @@ public class Parser
     private IInstruction GetBlockInst(Token[] tokens)
     {
         List<IInstruction> lines = [];
+        IEnumerable<IInstruction> a = lines;
 
         do
         {
+            if (tokens[tokenIndex].Type == TokenType.EndOfLine ||
+            tokens[tokenIndex].Type == TokenType.EndOfFile) tokenIndex += 1;
             //aqui se ve si es una linea de asignacion, funcion, etiqueta o GoTo
             if (GetAssignInst(tokens, out IInstruction? line))
                 lines.Add(line!);
-            else if (GetFuncInst(tokens, out line))
-                lines.Add(line!);
+            else if (GetFuncInst(tokens, out IInstruction? funcInst))
+                lines.Add(funcInst!);
+            else if (GetGoToLine(tokens, out GoToInst goTo))
+                lines.Add(goTo);
+            else if (GetLabel(tokens, out Label label))
+                lines.Add(label);
+            else throw new InvalidExpressionException("Esta instruccion no es valida");
+
             // Añadir otras lineas   
         } while (tokenIndex < tokens.Length);
 
         return new BlockInstruction(lines);
+    }
+
+    private bool GetLabel(Token[] tokens, out Label label)
+    {
+        int startIndex = tokenIndex;
+        if (!MatchToken(tokens, TokenType.Etiqueta, out string name))
+            return ResetIndex(startIndex, out label!);
+        label = new Label(name);
+        return true;
+    }
+
+    private bool GetGoToLine(Token[] tokens, out GoToInst goTo)
+    {
+        int startIndex = tokenIndex;
+        if (!MatchGoTo(tokens, out goTo))
+            return ResetIndex(startIndex, out goTo!);
+        return true;
+    }
+
+    private bool MatchGoTo(Token[] tokens, out GoToInst goTo)
+    {
+        if (!MatchToken(tokens, TokenType.Jump) ||
+         !MatchToken(tokens, TokenType.CorcheteAbierto) ||
+         !MatchToken(tokens, TokenType.Identificador, out string name) ||
+         !MatchToken(tokens, TokenType.CorcheteCerrado) ||
+         !MatchToken(tokens, TokenType.ParentesisAbierto) ||
+         !GetBooleanExp(tokens, out IExpression<bool> boolean) ||
+         !MatchToken(tokens, TokenType.ParentesisCerrado)
+         )
+
+        {
+            goTo = default!;
+            return false;
+        }
+
+        goTo = new GoToInst(name, boolean);
+        return true;
     }
 
     private bool GetAssignInst(Token[] tokens, out IInstruction? inst)
@@ -66,11 +116,11 @@ public class Parser
     private bool GetFuncInst(Token[] tokens, out IInstruction? inst)
     {
         var startIndex = tokenIndex;
-        var name = tokens[startIndex].Name;
-        if (!MatchToken(tokens, TokenType.Identificador) ||
-        !MatchToken(tokens, TokenType.ParentesisAbierto))
+        if (!MatchFuntion(tokens, out inst, startIndex))
+        {
             return ResetIndex(startIndex, out inst);
-
+        }
+        return true;
     }
 
     private static bool AssignInst<T>(string name, IExpression<T> value, out IInstruction inst)
@@ -124,30 +174,37 @@ public class Parser
     {
         if (!MatchToken(tokens, TokenType.Identificador) || !MatchToken(tokens, TokenType.ParentesisAbierto))
             return ResetIndex(startIndex, out num);
-        if (!MatchParams(tokens, out object[] @params))
+        if (!MatchParams(tokens, out string[] @params))
             return ResetIndex(startIndex, out num);
-        num = new Function<int>(tokens[startIndex].Name, @params);
+        num = new FunctionExp<int>(tokens[startIndex].Name, @params);
         return true;
     }
-    private bool MatchFuntion(Token[] tokens, out IInstruction num, int startIndex)
+    private bool MatchFuntion(Token[] tokens, out IInstruction? num, int startIndex)
     {
         if (!MatchToken(tokens, TokenType.Identificador) || !MatchToken(tokens, TokenType.ParentesisAbierto))
             return ResetIndex(startIndex, out num);
-        if (!MatchParams(tokens, out object[] @params))
-            return ResetIndex(startIndex, out num);
-        num = new Instruction(tokens[startIndex].Name, @params);
+        if (!MatchParams(tokens, out string[] @params))
+        {
+            num = default;
+            return false;
+        }
+        num = new InstructionFunc(tokens[startIndex].Name, @params);
         return true;
     }
 
-    private bool MatchParams(Token[] tokens, out object[] @params)
+
+    private bool MatchParams(Token[] tokens, out string[] @params)
     {
+        //BUG 
         //lugar donde deben ir las comas
         int paridad = (tokenIndex + 1) % 2;
-        List<object> list = [];
-        while (tokens[tokenIndex].Type != TokenType.ParentesisCerrado && tokens[tokenIndex].Type != TokenType.EndOfFile)
+        List<string> list = [];
+        while (tokens[tokenIndex].Type != TokenType.ParentesisCerrado &&
+        tokens[tokenIndex].Type != TokenType.EndOfLine && tokens[tokenIndex].Type != TokenType.EndOfFile)
         {
-            if (tokenIndex == paridad && tokens[tokenIndex].Type != TokenType.Coma)
+            if (tokenIndex % 2 == paridad && tokens[tokenIndex].Type != TokenType.Coma)
             {
+
                 @params = default!;
                 return false;
             }
@@ -158,14 +215,24 @@ public class Parser
             }
             tokenIndex += 1;
         }
-        if (tokens[tokenIndex].Type == TokenType.EndOfFile)
+        if (tokens[tokenIndex].Type == TokenType.EndOfLine)
         {
+
             @params = default!;
             return false;
         }
         tokenIndex++;
         @params = list.ToArray();
         return true;
+    }
+
+    private void SkipLine(Token[] tokens)
+    {
+        while (tokens[tokenIndex].Type != TokenType.EndOfLine)
+        {
+            tokenIndex += 1;
+        }
+        tokenIndex += 1;
     }
 
     private bool GetArithmeticExp(Token[] tokens, IExpression<int>? left, out IExpression<int>? num, int preceed)
@@ -273,4 +340,16 @@ public class Parser
         tokenIndex++;
         return true;
     }
+    private bool MatchToken(Token[] tokens, TokenType type, out string name)
+    {
+        if (tokenIndex >= tokens.Length || tokens[tokenIndex].Type != type)
+        {
+            name = null!;
+            return false;
+        }
+        name = tokens[tokenIndex].Name;
+        tokenIndex++;
+        return true;
+    }
 }
+
