@@ -1,10 +1,11 @@
 using System.ComponentModel;
 using System.Text;
 using Core.Enum;
+using Core.Errors;
 
 namespace Core.Model;
 
-public static class Lexer
+public class Lexer
 {
     public static string GetContentPath()
     {
@@ -39,6 +40,7 @@ public static class Lexer
         return File.ReadAllLines(path);
     }
 
+    public IEnumerable<LexerError> lexerErrors = [];
     public static readonly Dictionary<string, TokenType> Delimiter = new()
     {
         {"+", TokenType.Suma},
@@ -110,13 +112,13 @@ public static class Lexer
     };
 
 
-    static List<Token> tokens = [];
-    static StringBuilder builder = new();
+    public List<Token> tokens = [];
+    private StringBuilder builder = new();
 
     //esto tokeniza
-    public static List<Token> Tokenizer(string[] lines)
+    public Token[] Tokenizer(string[] lines)
     {
-
+         if (lines.Length == 0) lines[0] = "";
 
         for (int i = 0; i < lines.Length; i++)
         {
@@ -128,23 +130,23 @@ public static class Lexer
                 string currentCharacter = lines[i][k].ToString();
                 if (currentCharacter == "\"")
                 {
-                    TextReader1(lines, ref i, ref k, tokens, ref builder);
-                    continue;
+                    if (TextReader1(lines, i, ref k, tokens, ref builder))
+                        continue;
 
                 }
-                if (k == lines[i].Length - 1)
+                if (k == lines[i].Length - 1 && !Delimiter.ContainsKey(currentCharacter) && currentCharacter != " ")
                 {
                     builder.Append(lines[i][k]);
                     a = builder.ToString();
                 }
-                if (a.Length == lines[i].Length)
+                if (k == lines[i].Length - 1)
                 {
                     AddToken(a, TokenType.Etiqueta, 0, i);
                     break;
                 }
 
                 //revisa si es un numero y lo agrega
-                if (int.TryParse(currentCharacter, out var result) && builder.Length == 0)
+                if (int.TryParse(currentCharacter, out var result) && (builder.Length == 0 || k == lines[i].Length - 1))
                 {
                     NumReader(lines, i, ref k, tokens, result);
                     builder.Clear();
@@ -179,24 +181,31 @@ public static class Lexer
                             AddToken(currentCharacter, type, k, i);
                     }
 
-                    //esto es por si se me olvida poner un delimitador en las palabras clave,
-                    //que no sean las comillas o el espacio
-                    else if (k != lines[i].Length - 1 && currentCharacter != " ") Console.WriteLine("No esta puesto {0} en las palabras claves", currentCharacter);
                 }
 
                 //si no sigue acumulando caracteres
                 else if (char.IsLetterOrDigit(lines[i][k]) || lines[i][k] == '_')
                     builder.Append(lines[i][k]);
-                else throw new InvalidDataException("Se esperaba una letra, un numero o '_'.");
+                else
+                {
+                    string text1 = "Se introdujo un caracter que no es valido en este lenguaje";
+                    lexerErrors = AddLexerError(i, k, k, text1);
+                }
 
             }
             if (i != lines.Length - 1) AddToken("EndOfLine", TokenType.EndOfLine, lines[i].Length, i);
         }
         AddToken("EndOfFile", TokenType.EndOfFile, lines.Length - 1, lines[lines.Length - 1].Length - 1);
-        return tokens;
+        return tokens.ToArray();
     }
 
-    private static bool TryDoubleCaracter(string[] lines, string currentCharacter, ref int k, int i)
+    private IEnumerable<LexerError> AddLexerError(int Row, int startCol, int endCol, string message)
+    {
+        Location location = new(Row, startCol, endCol);
+        return lexerErrors.Append(new LexerError(message, location));
+    }
+
+    private bool TryDoubleCaracter(string[] lines, string currentCharacter, ref int k, int i)
     {
         StringBuilder builder1 = new();
         builder1.Append(currentCharacter);
@@ -220,7 +229,7 @@ public static class Lexer
 
     }
 
-    private static void AddToken(string name, TokenType tokenType, int col, int row)
+    private void AddToken(string name, TokenType tokenType, int col, int row)
     {
         Token token = new(name, tokenType, col, row);
         tokens.Add(token);
@@ -236,11 +245,11 @@ public static class Lexer
             if (!int.TryParse(lines[i][n].ToString(), out _) || n == lines[i].Length - 1)
             {
 
-                if (n == lines[i].Length - 1) builder1.Append(lines[i][n]);
+                if (n == lines[i].Length - 1 && int.TryParse(lines[i][n].ToString(), out _)) builder1.Append(lines[i][n]);
                 string b = builder1.ToString();
                 Token token = new(b, TokenType.Numero, k, i);
                 tokens.Add(token);
-                k = n == lines[i].Length - 1 ? n : n - 1;
+                k = n == lines[i].Length - 1 && int.TryParse(lines[i][n].ToString(), out _) ? n : n - 1;
                 return;
             }
 
@@ -252,36 +261,33 @@ public static class Lexer
 
     }
 
-    private static void TextReader1(string[] lines, ref int i, ref int k, List<Token> tokens, ref StringBuilder builder)
+    private bool TextReader1(string[] lines, int i, ref int k, List<Token> tokens, ref StringBuilder builder)
     {
         StringBuilder builder1 = new();
+        builder.Clear();
 
-        //esto va hasta el final de la linea, si no ha encontrado otra comilla salta de linea
-        for (int m = i; m < lines.Length; m++)
+        for (int n = k + 1; n < lines[i].Length; n++)
         {
-            for (int n = m == i ? k + 1 : 0; n < lines[i].Length; n++)
+            if (lines[i][n].ToString() == "\"")
             {
-                if (lines[m][n].ToString() == "\"")
-                {
 
-                    string b = builder1.ToString();
-                    if (!Colores.ContainsKey(b))
-                        throw new InvalidEnumArgumentException("Se esperaba un color valido en esta cadena de texto");
-                    Token token = new(b, TokenType.Color, k + 1, i);
-                    tokens.Add(token);
-                    builder.Clear();
-                    k = n;
-                    i = m;
-                    return;
-                }
-                else
+                string b = builder1.ToString();
+                if (!Colores.ContainsKey(b))
                 {
-                    builder1.Append(lines[m][n]);
+                    lexerErrors = AddLexerError(i, k, n, "Se esperaba un color valido en esta cadena de texto");
                 }
+                Token token = new(b, TokenType.Color, k + 1, i);
+                tokens.Add(token);
+                k = n;
+                return true;
+            }
+            else
+            {
+                builder1.Append(lines[i][n]);
             }
         }
-        // aqui tengo que lanzar un error que si llegue al final y no encontre otra comilla
-        //TODO es pq el string se abrio y no se cerro
-        //TODO manejar los errores del lexer y parser
+        lexerErrors = AddLexerError(i, k, lines[i].Length - 1, "Falta la comilla para cerrar la cadena de texto en la linea");
+        k = lines[i].Length - 1;
+        return false;
     }
 }

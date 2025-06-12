@@ -1,15 +1,18 @@
 namespace Core.Language;
 
+using Core.Interface;
 using Core.Errors;
 
-public abstract class Function
+public abstract class Function : ILocation
 {
-    public Function(string name, params string[] @params)
+    public Function(string name, Location errorLocation, params string[] @params)
     {
+        ErrorLocation = errorLocation;
         Name = name;
         Params = @params;
     }
 
+    public Location ErrorLocation { get; private set; }
     public string Name { get; }
     public string[] Params { get; }
 
@@ -19,35 +22,34 @@ public abstract class Function
         errors = semanticErrors;
         if (Params.Length != types.Length)
         {
-            var a = new SemanticErrors("La cantidad de parametros es incorrecta");
+            var b = "La cantidad de parametros es incorrecta";
+            var a = new SemanticErrors(b, ErrorLocation);
             semanticErrors.Add(a);
             return false;
         }
 
         for (int i = 0; i < Params.Length; i++)
         {
-            if (ParamType(Params[i], context) != types[i])
+            if (ParamType(Params[i], context)?.GetType() != types[i])
             {
-                var b = new SemanticErrors("Se esperaba un parametro de otro tipo");
+                var b = new SemanticErrors("Se esperaba un parametro de otro tipo", ErrorLocation);
                 semanticErrors.Add(b);
             }
         }
         return semanticErrors.Count == 0;
     }
 
-    public static Type? ParamType(string v, Context context)
+    public static object? ParamType(string v, Context context)
     {
         if (int.TryParse(v, out int result))
-            return result.GetType();
+            return result;
         else if (bool.TryParse(v, out bool result1))
-            return result1.GetType();
-        else if (context.Colores.Contains(v))
-            return v.GetType();
+            return result1;
+        else if (context.Colors.Contains(v))
+            return v;
         else if (context.Variables.TryGetValue(v, out object? value))
-            return value.GetType();
-        //TODO acordarme de cuando haga el recorrido por las variables guardar el valor por default
+            return value;
         else
             return null;
     }
-
 }

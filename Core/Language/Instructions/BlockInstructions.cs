@@ -5,48 +5,53 @@ namespace Core.Language;
 
 public class BlockInstruction : IInstruction, ICheckSemantic
 {
-    private readonly List<IInstruction> lines;
 
     public BlockInstruction(List<IInstruction> lines)
     {
-        this.lines = lines;
         Lines = lines;
     }
 
     public List<IInstruction> Lines { get; }
 
-    private Context BuildContext(Dictionary<string, (Func, Type[], Type)> FuncExp, Dictionary<string, (Action, Type[])> FunInst)
+    public Context BuildContext(Dictionary<string, (Func, Type[], Type)> FuncExp, Dictionary<string, (Action, Type[])> FunInst)
     {
-        var variables = new Dictionary<string, object>();
-        var labels = new Dictionary<string, Label>();
-        foreach (var item in lines)
-        {
-            if (item is Label label)
-                labels.Add(label.Name!, label);
-            if (item is Variable<Type> variable)
-                //TODO revisar si el DefaultBinger devuelve el valor predeteriminado del tipo
-                variables.Add(variable.Name, Type.DefaultBinder);
-
-        }
-        var context = new Context(FuncExp, FunInst, labels, variables);
+        var labels = new Dictionary<string, int>();
+        if (Lines != null)
+            for (int i = 0; i < Lines.Count; i++)
+            {
+                IInstruction? item = Lines[i];
+                if (item is Label label && !labels.ContainsKey(label.Name!))
+                {
+                    labels.Add(label.Name!, i);
+                }
+            }
+        var context = new Context(FuncExp, FunInst, labels);
         return context;
     }
 
-    void IInstruction.Execute(Context context)
+    public void Execute(Context context)
     {
-        foreach (var item in Lines)
+        for (int i = 0; i < Lines.Count; i++)
         {
+            IInstruction? item = Lines[i];
             item.Execute(context);
+            if (context.IsGoTo)
+            {
+                i = context.Labels[context.CurrentLabel!];
+                context.IsGoTo = false;
+            }
         }
     }
 
     public IEnumerable<SemanticErrors>? CheckSemantic(Context context)
     {
-        foreach (var item in Lines)
-        {
-            var a = item.CheckSemantic(context);
-            foreach (var item1 in a!)
-                yield return item1;
-        }
+        if (Lines != null)
+            foreach (var item in Lines)
+            {
+                var a = item.CheckSemantic(context);
+                if (a != null)
+                    foreach (var item1 in a!)
+                        yield return item1;
+            }
     }
 }

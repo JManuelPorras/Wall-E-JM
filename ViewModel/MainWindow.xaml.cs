@@ -1,55 +1,154 @@
-﻿using Microsoft.Win32;
+﻿using Core.Language;
+using Core.Model;
+using Microsoft.Win32;
 using System;
+using System.ComponentModel;
 using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Action = Core.Language.Action;
 
-namespace PixelArtApp
+namespace ViewModel
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IPaintable
     {
-        private int canvasSize = 20;
-        private const int MaxCanvasSize = 256;
+        private const string CANVAS_KEY = "GridSettings";
+        public const int MaxCanvasSize = 256;
+        private GridSettings mapSettings;
+        public Rectangle[,]? RectangMatrix { get; set; }
+        private FuncDefinitions funcDefinitions;
+        public int gridSize { get; }
+
+
 
         public MainWindow()
         {
             InitializeComponent();
-            InitializeCanvas();
+            mapSettings = (Resources[CANVAS_KEY] as GridSettings)!;
+            mapSettings.PropertyChanged += ResizeCanvasGrid!;
+            funcDefinitions = new FuncDefinitions(this);
+
+            funcDictionary = new()
+                {
+                    {"GetActualX", (Portals.Portal(funcDefinitions.GetActualX), [], typeof(int)) },
+                    {"GetActualY", (Portals.Portal(funcDefinitions.GetActualY), [], typeof(int)) },
+                    {"GetCanvasSize", (Portals.Portal(funcDefinitions.GetCanvasSize), [], typeof(int)) },
+                    {"GetColorCount", (Portals.Portal<string,int,int,int,int,int>(funcDefinitions.GetColorCount), [typeof(string),typeof(int),typeof(int),typeof(int),typeof(int)], typeof(int)) },
+                    {"IsBrushColor", (Portals.Portal<string,int>(funcDefinitions.IsBrushColor), [typeof(string)], typeof(int)) },
+                    {"IsBrushSize", (Portals.Portal<int,int>(funcDefinitions.IsBrushSize), [typeof(int)], typeof(int)) },
+                    {"IsCanvasColor", (Portals.Portal<string,int,int,int>(funcDefinitions.IsCanvasColor), [typeof(string),typeof(int),typeof(int)], typeof(int)) },
+
+                };
+
+            actionDictionary = new()
+                {
+                    { "Spawn", (Portals.Portal<int, int>(funcDefinitions.Spawn), [typeof(int), typeof (int)]) },
+                    {"Color", (Portals.Portal<string>(funcDefinitions.Color), [typeof(string)]) },
+                    {"Size", (Portals.Portal<int>(funcDefinitions.Size), [typeof(int)]) },
+                    {"DrawLine", (Portals.Portal<int,int,int>(funcDefinitions.DrawLine), [typeof(int), typeof(int), typeof(int)]) },
+                    {"DrawRectangle", (Portals.Portal<int,int,int,int,int>(funcDefinitions.DrawRectangle), [typeof(int), typeof(int), typeof(int),typeof(int),typeof(int)]) },
+                    {"Fill", (Portals.Portal(funcDefinitions.Fill), []) },
+                    {"DrawCircle", (Portals.Portal<int,int,int>(funcDefinitions.DrawCircle), [typeof(int), typeof(int), typeof(int)]) },
+
+                };
+
+            gridSize = mapSettings.GridSize;
+            PixelColor = Brushes.Transparent;
+
+#if DEBUG
+            // En modo DEBUG, subimos desde el directorio de ejecución hasta la raíz del proyecto
+            var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            var path = directory
+                .Parent? // bin
+                .Parent? // Debug
+                .Parent? // netX.Y
+                .FullName!;
+#else
+            path = AppDomain.CurrentDomain.BaseDirectory;
+#endif
+            path = System.IO.Path.Combine(path, @"Assent\WALL-E-PNG-Transparent.png");
+            walleeImage = new BitmapImage(new Uri(path));
+        }
+
+        public Dictionary<string, (Func, Type[], Type)> funcDictionary { get; private set; }
+        public Dictionary<string, (Action, Type[])> actionDictionary { get; private set; }
+
+        private void ResetCanvas()
+        {
+            var cols = (int)(CanvasGrid.ActualHeight / mapSettings.CellSize);
+            var rows = (int)(CanvasGrid.ActualWidth / mapSettings.CellSize);
+            mapSettings.GridSize = Math.Min(cols, rows);
+            RectangMatrix = new Rectangle[mapSettings.GridSize, mapSettings.GridSize];
+            CanvasGrid.ColumnDefinitions.Clear();
+            CanvasGrid.RowDefinitions.Clear();
+            CanvasGrid.Children.Remove(wallee);
+            OnlyOneSpawn = true;
         }
 
         private void InitializeCanvas()
         {
-            PixelCanvas.ItemsSource = new int[canvasSize * canvasSize];
+            var gridLength = new GridLength(1, GridUnitType.Star);
+            for (int i = 0; i < mapSettings.GridSize; i++)
+            {
+                CanvasGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = gridLength });
+                CanvasGrid.RowDefinitions.Add(new RowDefinition() { Height = gridLength });
+            }
+
+            //filas
+            for (int i = 0; i < RectangMatrix!.GetLength(0); i++)
+            {
+                //columnas
+                for (int k = 0; k < RectangMatrix.GetLength(1); k++)
+                {
+                    var cell = new Rectangle()
+                    {
+                        Fill = Brushes.White,
+                        Stroke = Brushes.Black,
+                        StrokeThickness = 0.5,
+                    };
+                    Grid.SetRow(cell, i);
+                    Grid.SetColumn(cell, k);
+
+                    RectangMatrix[i, k] = cell;
+                    CanvasGrid.Children.Add(cell);
+                }
+            }
+        }
+
+        private void ResizeCanvasGrid(object sender, PropertyChangedEventArgs e)
+        {
+            ResetCanvas();
+            InitializeCanvas();
 
         }
 
-        private void ResizeButton_Click(object sender, RoutedEventArgs e)
+        private void CanvasGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(CanvasSizeTextBox.Text, out int newSize) && newSize > 0 && newSize <= MaxCanvasSize)
-            {
-                canvasSize = newSize;
-                InitializeCanvas();
-            }
-            else
-            {
-                MessageBox.Show($"Please enter a valid number between 1 and {MaxCanvasSize}",
-                              "Invalid Input",
-                              MessageBoxButton.OK,
-                              MessageBoxImage.Warning);
-            }
+            ResetCanvas();
+            InitializeCanvas();
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var code = CodeEditor.Text;
-                // Aquí procesarías el código para modificar el canvas
-                // Esto es un ejemplo simple que pinta algunos píxeles
-                ExecuteSampleCode();
-                throw new NotImplementedException("Esto no esta hecho");
+                funcDefinitions = new FuncDefinitions(this);
+                ClearCanvas();
+                string[] lines = GetLines();
+
+                var codemanager = new CoreManager(lines, funcDictionary, actionDictionary);
+                if (codemanager.errors != null)
+                    ErrorLabel.Content = string.Join("\n", codemanager.errors);
+                codemanager.blockInstruction.Execute(codemanager.context);
+
             }
             catch (Exception ex)
             {
@@ -60,49 +159,7 @@ namespace PixelArtApp
             }
         }
 
-        private void ExecuteSampleCode()
-        {
-            // Limpiar canvas primero (opcional)
-            ClearCanvas();
 
-            // Ejemplo: dibuja patrones básicos
-            for (int i = 0; i < canvasSize; i++)
-            {
-                SetPixelColor(i, i, Brushes.Red); // Diagonal principal
-                SetPixelColor(i, canvasSize - 1 - i, Brushes.Blue); // Diagonal secundaria
-
-                // Bordes
-                SetPixelColor(0, i, Brushes.Green);
-                SetPixelColor(canvasSize - 1, i, Brushes.Green);
-                SetPixelColor(i, 0, Brushes.Green);
-                SetPixelColor(i, canvasSize - 1, Brushes.Green);
-            }
-        }
-
-        private void ClearCanvas()
-        {
-            for (int y = 0; y < canvasSize; y++)
-            {
-                for (int x = 0; x < canvasSize; x++)
-                {
-                    SetPixelColor(x, y, Brushes.White);
-                }
-            }
-        }
-
-        private void SetPixelColor(int x, int y, Brush color)
-        {
-            if (x >= 0 && x < canvasSize && y >= 0 && y < canvasSize)
-            {
-                var container = (ContentPresenter)PixelCanvas.ItemContainerGenerator.ContainerFromIndex(y * canvasSize + x);
-                if (container != null)
-                {
-                    var border = (Border)VisualTreeHelper.GetChild(container, 0);
-                    var rectangle = (Rectangle)border.Child;
-                    rectangle.Fill = color;
-                }
-            }
-        }
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
@@ -149,6 +206,20 @@ namespace PixelArtApp
                                     MessageBoxButton.OK,
                                     MessageBoxImage.Error);
                 }
+            }
+        }
+
+        private void CodeEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            funcDefinitions = new FuncDefinitions(this);
+            string[] lines = GetLines();
+
+            var codemanager = new CoreManager(lines, funcDictionary, actionDictionary);
+
+            if (codemanager.errors != null)
+            {
+                var strErrors = codemanager.errors.Select(x => x.ToString());
+                ErrorLabel.Content = string.Join("\n", strErrors);
             }
         }
     }

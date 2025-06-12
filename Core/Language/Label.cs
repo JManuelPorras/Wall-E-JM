@@ -14,12 +14,8 @@ public class Label : IInstruction, ICheckSemantic
 
     public IEnumerable<SemanticErrors>? CheckSemantic(Context context)
     {
-        if (context.Labels.ContainsKey(Name!))
-            yield return new SemanticErrors("Existe otra etiqueta con el mismo nombre");
+        return default;
     }
 
-    void IInstruction.Execute(Context context)
-    {
-
-    }
+    void IInstruction.Execute(Context context) { }
 }

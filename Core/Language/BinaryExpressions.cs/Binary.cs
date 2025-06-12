@@ -21,10 +21,12 @@ public abstract class BinaryExpression<T, K> : IExpression<T>, ICheckSemantic
     {
         var leftSon = Left.CheckSemantic(context)!;
         var rightSon = Right.CheckSemantic(context)!;
-        foreach (var item in leftSon)
-            yield return item;
-        foreach (var item in rightSon)
-            yield return item;
+        if (leftSon != null)
+            foreach (var item in leftSon)
+                yield return item;
+        if (rightSon != null)
+            foreach (var item in rightSon)
+                yield return item;
     }
 
     public abstract T Execute(Context context);

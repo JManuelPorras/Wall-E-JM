@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:ViewModel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

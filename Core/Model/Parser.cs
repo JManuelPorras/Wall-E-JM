@@ -2,13 +2,15 @@ using Core.Enum;
 using Core.Interface;
 using Core.Language;
 using Core.Language.Instructions;
-using System.Data;
-using System.Text;
+using Core.Errors;
 
 namespace Core.Model;
 
+
 public class Parser
 {
+    public IEnumerable<ParserError> parserErrors = [];
+    private int tokenIndex;
     private readonly Dictionary<int, TokenType[]> PreceedOrderInt = new()
      {
         {1,[TokenType.Resta, TokenType.Suma]},
@@ -24,7 +26,11 @@ public class Parser
         TokenType.MenorOIgual, TokenType.MenorQue]},
      };
 
-    private int tokenIndex;
+    private IEnumerable<ParserError> AddParserError(int Row, int startCol, int endCol, string message)
+    {
+        Location location = new(Row, startCol, endCol);
+        return parserErrors.Append(new ParserError(message, location));
+    }
 
     public IInstruction Parse(Token[] tokens)
     {
@@ -35,12 +41,12 @@ public class Parser
     private IInstruction GetBlockInst(Token[] tokens)
     {
         List<IInstruction> lines = [];
-        IEnumerable<IInstruction> a = lines;
+        if (tokens.Length == 0) return new BlockInstruction(lines);
 
         do
         {
             if (tokens[tokenIndex].Type == TokenType.EndOfLine ||
-            tokens[tokenIndex].Type == TokenType.EndOfFile) tokenIndex += 1;
+            tokens[tokenIndex].Type == TokenType.EndOfFile) { tokenIndex += 1; continue; }
             //aqui se ve si es una linea de asignacion, funcion, etiqueta o GoTo
             if (GetAssignInst(tokens, out IInstruction? line))
                 lines.Add(line!);
@@ -50,9 +56,19 @@ public class Parser
                 lines.Add(goTo);
             else if (GetLabel(tokens, out Label label))
                 lines.Add(label);
-            else throw new InvalidExpressionException("Esta instruccion no es valida");
-
-            // Añadir otras lineas   
+            else
+            {
+                for (int i = tokenIndex; i < tokens.Length; i++)
+                {
+                    if (tokens[i].Type == TokenType.EndOfLine ||
+                     tokens[i].Type == TokenType.EndOfFile)
+                    {
+                        tokenIndex = i;
+                        parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, "Este tipo de instruccion no es valida");
+                        break;
+                    }
+                }
+            }
         } while (tokenIndex < tokens.Length);
 
         return new BlockInstruction(lines);
@@ -70,28 +86,55 @@ public class Parser
     private bool GetGoToLine(Token[] tokens, out GoToInst goTo)
     {
         int startIndex = tokenIndex;
-        if (!MatchGoTo(tokens, out goTo))
+        if (!MatchGoTo(tokens, out goTo, startIndex))
             return ResetIndex(startIndex, out goTo!);
         return true;
     }
 
-    private bool MatchGoTo(Token[] tokens, out GoToInst goTo)
+    private bool MatchGoTo(Token[] tokens, out GoToInst goTo, int startIndex)
     {
-        if (!MatchToken(tokens, TokenType.Jump) ||
-         !MatchToken(tokens, TokenType.CorcheteAbierto) ||
-         !MatchToken(tokens, TokenType.Identificador, out string name) ||
-         !MatchToken(tokens, TokenType.CorcheteCerrado) ||
-         !MatchToken(tokens, TokenType.ParentesisAbierto) ||
-         !GetBooleanExp(tokens, out IExpression<bool> boolean) ||
-         !MatchToken(tokens, TokenType.ParentesisCerrado)
-         )
-
+        if (!MatchToken(tokens, TokenType.Jump))
         {
-            goTo = default!;
-            return false;
+            return ReturnFalse(out goTo!);
+        }
+        if (!MatchToken(tokens, TokenType.CorcheteAbierto))
+        {
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, "Se esperaba un corchete abierto despues del GOTO");
+            return ReturnFalse(out goTo!);
+        }
+        if (!MatchToken(tokens, TokenType.Identificador, out string name))
+        {
+            var a = "Se esperaba el nombre de una etiqueta luego del corchete abierto";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
+            return ReturnFalse(out goTo!);
+        }
+        if (!MatchToken(tokens, TokenType.CorcheteCerrado))
+        {
+            var b = "Se esperaba un corchete cerrado luego del nombre de la etiqueta";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, b);
+            return ReturnFalse(out goTo!);
+        }
+        if (!MatchToken(tokens, TokenType.ParentesisAbierto))
+        {
+            var c = "Se esperaba un parentesis abierto despues del corchete cerrado";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, c);
+            return ReturnFalse(out goTo!);
+        }
+        if (!GetBooleanExp(tokens, out IExpression<bool> boolean))
+        {
+            var d = "Se esperaba una expresion booleana despues del parentesis abierto";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, d);
+            return ReturnFalse(out goTo!);
+        }
+        if (!MatchToken(tokens, TokenType.ParentesisCerrado))
+        {
+            var e = "Se esperaba un parentesis cerrado despues de la expresion booleana";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, e);
+            return ReturnFalse(out goTo!);
         }
 
-        goTo = new GoToInst(name, boolean);
+        Location location = new(tokens[startIndex].Row, tokens[startIndex].Col, tokens[tokenIndex].Col);
+        goTo = new GoToInst(name, boolean, location);
         return true;
     }
 
@@ -107,9 +150,10 @@ public class Parser
 
         if (GetArithmeticExp(tokens, out IExpression<int>? num))
             return AssignInst(name, num!, out inst);
-        ResetIndex(startIndex, out inst);
         if (GetBooleanExp(tokens, out IExpression<bool> Boolean))
             return AssignInst(name, Boolean, out inst);
+        var a = "Se esperaba una expresion aritmetica o booleana luego del asignador";
+        parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
         return ResetIndex(startIndex, out inst);
     }
 
@@ -157,10 +201,10 @@ public class Parser
         {
             return true;
         }
-        //el visitor despues tiene que revisar la variable para ver si contiene realmente un entero, lo mismo para la funcion
         if (MatchToken(tokens, TokenType.Identificador))
         {
-            num = new Variable<int>(token.Name);
+            Location location = new(tokens[tokenIndex - 1].Row, tokens[tokenIndex - 1].Col, tokens[tokenIndex - 1].Col);
+            num = new Variable<int>(token.Name, location);
             return true;
         }
         if (MatchToken(tokens, TokenType.ParentesisAbierto) && GetArithmeticExp(tokens, out num, 1) && MatchToken(tokens, TokenType.ParentesisCerrado))
@@ -175,8 +219,11 @@ public class Parser
         if (!MatchToken(tokens, TokenType.Identificador) || !MatchToken(tokens, TokenType.ParentesisAbierto))
             return ResetIndex(startIndex, out num);
         if (!MatchParams(tokens, out string[] @params))
+        {
             return ResetIndex(startIndex, out num);
-        num = new FunctionExp<int>(tokens[startIndex].Name, @params);
+        }
+        Location location = new(tokens[startIndex].Row, tokens[startIndex].Col, tokens[tokenIndex].Col);
+        num = new FunctionExp<int>(tokens[startIndex].Name, location, @params);
         return true;
     }
     private bool MatchFuntion(Token[] tokens, out IInstruction? num, int startIndex)
@@ -185,18 +232,16 @@ public class Parser
             return ResetIndex(startIndex, out num);
         if (!MatchParams(tokens, out string[] @params))
         {
-            num = default;
-            return false;
+            return ResetIndex(startIndex, out num);
         }
-        num = new InstructionFunc(tokens[startIndex].Name, @params);
+        Location location = new(tokens[startIndex].Row, tokens[startIndex].Col, tokens[tokenIndex].Col);
+        num = new InstructionFunc(tokens[startIndex].Name, location, @params);
         return true;
     }
 
 
     private bool MatchParams(Token[] tokens, out string[] @params)
     {
-        //BUG 
-        //lugar donde deben ir las comas
         int paridad = (tokenIndex + 1) % 2;
         List<string> list = [];
         while (tokens[tokenIndex].Type != TokenType.ParentesisCerrado &&
@@ -204,22 +249,23 @@ public class Parser
         {
             if (tokenIndex % 2 == paridad && tokens[tokenIndex].Type != TokenType.Coma)
             {
-
-                @params = default!;
-                return false;
+                var a = "No estan puestas correctamente las comas";
+                parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
+                return ReturnFalse(out @params!);
             }
-            else
+            else if (tokenIndex % 2 != paridad)
             {
                 //guardo los nombres de los tokens en el array
                 list.Add(tokens[tokenIndex].Name);
             }
             tokenIndex += 1;
         }
-        if (tokens[tokenIndex].Type == TokenType.EndOfLine)
+        if (tokens[tokenIndex].Type == TokenType.EndOfLine ||
+        tokens[tokenIndex].Type == TokenType.EndOfFile)
         {
-
-            @params = default!;
-            return false;
+            var a = "Falta un parentesis que cierre los parametros";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
+            ReturnFalse(out @params!);
         }
         tokenIndex++;
         @params = list.ToArray();
@@ -251,7 +297,12 @@ public class Parser
                 return GetArithmeticExp(tokens, node, out num, preceed);
             }
             else
-                throw new InvalidOperationException();
+            {
+                var a = "Se esperaba una expresion aritmetica valida a la derecha del operador";
+                parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
+            }
+            return ReturnFalse(out num);
+
         }
         if (GetArithmeticExp(tokens, out right, preceed))
         {
@@ -259,8 +310,11 @@ public class Parser
             return true;
         }
         else
-            throw new InvalidOperationException();
-
+        {
+            var a = "Se esperaba una expresion aritmetica valida a la derecha del operador";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
+        }
+        return ReturnFalse(out num);
     }
 
     private bool MatchOperator(Token[] tokens, TokenType[] tokenTypes, out TokenType type)
@@ -274,8 +328,7 @@ public class Parser
                 return true;
             }
         }
-        type = default;
-        return false;
+        return ReturnFalse(out type);
     }
 
     //metodo portal, para pasarle la precedencia
@@ -294,8 +347,7 @@ public class Parser
                 boolean = exp;
                 return true;
             }
-            boolean = default!;
-            return false;
+            return ReturnFalse(out boolean!);
         }
         if (!GetBooleanExp(tokens, out IExpression<bool> left, preceed + 1))
             return ResetIndex(startIndex, out boolean!);
@@ -306,7 +358,9 @@ public class Parser
         }
         if (!GetBooleanExp(tokens, out IExpression<bool> right, preceed))
         {
-            throw new InvalidOperationException("Se esperaba una expresion booleana despues del operador.");
+            var a = "Se esperaba una expresion booleana valida despues del operador";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
+            return ReturnFalse(out boolean!);
         }
         boolean = new BinaryBoolExpression(left, right, type);
         return true;
@@ -316,11 +370,15 @@ public class Parser
     private bool GetIntToBoolExpression(Token[] tokens, out BinaryIntToBoolExpresion exp)
     {
         if (!GetArithmeticExp(tokens, out IExpression<int>? left) ||
-        !MatchOperator(tokens, PreceedOrderBool[3], out TokenType type) ||
-        !GetArithmeticExp(tokens, out IExpression<int>? right))
+        !MatchOperator(tokens, PreceedOrderBool[3], out TokenType type))
         {
-            exp = default!;
-            return false;
+            return ReturnFalse(out exp!);
+        }
+        if (!GetArithmeticExp(tokens, out IExpression<int>? right))
+        {
+            var a = "Se esperaba una expresion aritmetica valida despues del comparador";
+            parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
+            return ReturnFalse(out exp!);
         }
         exp = new BinaryIntToBoolExpresion(left!, right!, type);
         return true;
@@ -329,6 +387,11 @@ public class Parser
     private bool ResetIndex<T>(int startIndex, out T? inst)
     {
         tokenIndex = startIndex;
+        inst = default;
+        return false;
+    }
+    private static bool ReturnFalse<T>(out T? inst)
+    {
         inst = default;
         return false;
     }

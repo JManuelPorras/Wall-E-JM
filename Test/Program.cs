@@ -8,24 +8,40 @@ public class Program
 {
     private static void Main(string[] args)
     {
+        var lexer = new Lexer();
         var lines = Lexer.ReadAllLines("Test.pw");
-        var tokens = Lexer.Tokenizer(lines);
+        var tokens = lexer.Tokenizer(lines);
         var resp = string.Join(',', tokens.Select(x => (x.Name, x.Type)));
-        System.Console.WriteLine(resp);
+        Console.WriteLine(resp);
+        Parser parser = new();
+        var blockInst = (BlockInstruction)parser.Parse(tokens);
+        var resp1 = string.Join(',', blockInst.Lines);
+        Console.WriteLine(resp1);
+        var parserproblems = parser.parserErrors;
+        var lexerproblems = lexer.lexerErrors;
+        var context = blockInst.BuildContext([], []);
+        var semanticProblems = blockInst.CheckSemantic(context);
 
-        var context = new Context(
-            new Dictionary<string, Func>
-            {
-                {"IsValid", IsValid},
-            },
-            new Dictionary<string, Action>
-            {
+        if (lexerproblems != null)
+            foreach (var item in lexerproblems)
+                Console.WriteLine(item.Message);
 
-            });
+        if (parserproblems != null)
+            foreach (var item in parserproblems)
+                Console.WriteLine(item.Message);
+
+        if (semanticProblems != null)
+            foreach (var item in semanticProblems!)
+                Console.WriteLine(item.Message);
+
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 
-    private static object IsValid(params object[] objects)
-    {
-        return true;
-    }
 }

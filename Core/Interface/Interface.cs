@@ -17,3 +17,8 @@ public interface ICheckSemantic
 {
     IEnumerable<SemanticErrors>? CheckSemantic(Context context);
 }
+
+public interface ILocation
+{
+    public Location ErrorLocation { get; }
+}

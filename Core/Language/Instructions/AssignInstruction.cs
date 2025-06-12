@@ -27,7 +27,8 @@ public class AssignInstruction<T> : IInstruction, ICheckSemantic
             foreach (var item in a)
                 yield return item;
         }
-        if (context.Variables.TryGetValue(Name, out object? value) && value is not T)
-            yield return new SemanticErrors("Esta variable ya fue asignada con otro tipo, debe asignarse el mismo");
+        if (!context.Variables.ContainsKey(Name))
+            context.Variables.Add(Name, default(T)!);
+        else context.Variables[Name] = default(T)!;
     }
 }
