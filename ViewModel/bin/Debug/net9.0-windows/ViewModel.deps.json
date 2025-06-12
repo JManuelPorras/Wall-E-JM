@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v9.0": {
       "ViewModel/1.0.0": {
         "dependencies": {
-          "Core": "1.0.0"
+          "Core": "1.0.0",
+          "Test": "1.0.0"
         },
         "runtime": {
           "ViewModel.dll": {}
@@ -17,6 +18,17 @@
       "Core/1.0.0": {
         "runtime": {
           "Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Test/1.0.0": {
+        "dependencies": {
+          "Core": "1.0.0"
+        },
+        "runtime": {
+          "Test.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -31,6 +43,11 @@
       "sha512": ""
     },
     "Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Test/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

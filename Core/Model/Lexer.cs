@@ -118,16 +118,26 @@ public class Lexer
     //esto tokeniza
     public Token[] Tokenizer(string[] lines)
     {
-         if (lines.Length == 0) lines[0] = "";
 
         for (int i = 0; i < lines.Length; i++)
         {
             if (lines[i] == "") continue;
+            int size = lines[i].Length;
+
             for (int k = 0; k < lines[i].Length; k++)
             {
                 string a = builder.ToString();
-
                 string currentCharacter = lines[i][k].ToString();
+
+                if (char.IsControl(lines[i][k]))
+                {
+                    // Ignorar caracteres de control como \n, \r, \t
+                    continue;
+                }
+
+
+                if (currentCharacter == " ") size -= 1;
+
                 if (currentCharacter == "\"")
                 {
                     if (TextReader1(lines, i, ref k, tokens, ref builder))
@@ -139,7 +149,7 @@ public class Lexer
                     builder.Append(lines[i][k]);
                     a = builder.ToString();
                 }
-                if (k == lines[i].Length - 1)
+                if (size == a.Length)
                 {
                     AddToken(a, TokenType.Etiqueta, 0, i);
                     break;
@@ -231,7 +241,7 @@ public class Lexer
 
     private void AddToken(string name, TokenType tokenType, int col, int row)
     {
-        Token token = new(name, tokenType, col, row);
+        Token token = new(name, tokenType, row, col);
         tokens.Add(token);
         builder.Clear();
     }

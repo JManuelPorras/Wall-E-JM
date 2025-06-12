@@ -48,3 +48,8 @@ C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\obj\Debug\net9.0-windows\Vie
 C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\obj\Debug\net9.0-windows\ref\ViewModel.dll
 C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\obj\Debug\net9.0-windows\ViewModel.sourcelink.json
 C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\obj\Debug\net9.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\bin\Debug\net9.0-windows\Test.deps.json
+C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\bin\Debug\net9.0-windows\Test.runtimeconfig.json
+C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\bin\Debug\net9.0-windows\Test.exe
+C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\bin\Debug\net9.0-windows\Test.dll
+C:\Users\josed\OneDrive\Desktop\Wall-E JM\ViewModel\bin\Debug\net9.0-windows\Test.pdb

@@ -8,6 +8,7 @@ public class Program
 {
     private static void Main(string[] args)
     {
+
         var lexer = new Lexer();
         var lines = Lexer.ReadAllLines("Test.pw");
         var tokens = lexer.Tokenizer(lines);
@@ -34,14 +35,6 @@ public class Program
             foreach (var item in semanticProblems!)
                 Console.WriteLine(item.Message);
 
-        try
-        {
-
-        }
-        catch (Exception e)
-        {
-
-        }
     }
 
 }

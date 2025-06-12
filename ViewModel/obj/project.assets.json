@@ -11,6 +11,19 @@
         "runtime": {
           "bin/placeholder/Core.dll": {}
         }
+      },
+      "Test/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Core": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Test.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Test.dll": {}
+        }
       }
     }
   },
@@ -19,11 +32,17 @@
       "type": "project",
       "path": "../Core/Core.csproj",
       "msbuildProject": "../Core/Core.csproj"
+    },
+    "Test/1.0.0": {
+      "type": "project",
+      "path": "../Test/Test.csproj",
+      "msbuildProject": "../Test/Test.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0-windows7.0": [
-      "Core >= 1.0.0"
+      "Core >= 1.0.0",
+      "Test >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -61,6 +80,9 @@
           "projectReferences": {
             "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Core.csproj": {
               "projectPath": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Core.csproj"
+            },
+            "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Test\\Test.csproj": {
+              "projectPath": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Test\\Test.csproj"
             }
           }
         }

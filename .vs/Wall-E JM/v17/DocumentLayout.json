@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\coremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\coremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\model\\parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|solutionrelative:core\\model\\parser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\model\\lexer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|solutionrelative:core\\model\\lexer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,28 +23,24 @@
       "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\partialmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\ipaintable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\ipaintable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\funcdefinitions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\funcdefinitions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\errors\\lexererror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|solutionrelative:core\\errors\\lexererror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\model\\lexer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|solutionrelative:core\\model\\lexer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\ipaintable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\ipaintable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\errors\\parsererror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|solutionrelative:core\\errors\\parsererror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\coremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|solutionrelative:viewmodel\\coremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F099EF83-E570-F1A7-D403-3F0F186F11BD}|ViewModel\\ViewModel.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\viewmodel\\portals.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -41,10 +49,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\language\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|solutionrelative:core\\language\\context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\errors\\lexererror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|solutionrelative:core\\errors\\lexererror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5ED06CAD-956C-C94D-BC0C-E89E30A887C2}|Core\\Core.csproj|c:\\users\\josed\\onedrive\\desktop\\wall-e jm\\core\\language\\instructions\\blockinstructions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -73,12 +77,12 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 138,
+          "DockedHeight": 267,
           "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\MainWindow.xaml",
               "RelativeDocumentMoniker": "ViewModel\\MainWindow.xaml",
@@ -90,7 +94,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "Portals.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\Portals.cs",
               "RelativeDocumentMoniker": "ViewModel\\Portals.cs",
@@ -102,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "Context.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Language\\Context.cs",
               "RelativeDocumentMoniker": "Core\\Language\\Context.cs",
@@ -115,75 +119,90 @@
           ]
         },
         {
-          "DockedHeight": 497,
-          "SelectedChildIndex": 0,
+          "DockedHeight": 368,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "Parser.cs",
+              "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Model\\Parser.cs",
+              "RelativeDocumentMoniker": "Core\\Model\\Parser.cs",
+              "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Model\\Parser.cs",
+              "RelativeToolTip": "Core\\Model\\Parser.cs",
+              "ViewState": "AgIAAIYBAAAAAAAAAAAjwJIBAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-12T03:33:35.071Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "ViewModel\\MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\MainWindow.xaml.cs",
               "RelativeToolTip": "ViewModel\\MainWindow.xaml.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAzwBQAAAA0AAAAAAAAAA==",
+              "ViewState": "AgIAAMoAAAAAAAAAAAAjwNYAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-31T21:41:10.126Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "FuncDefinitions.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\FuncDefinitions.cs",
               "RelativeDocumentMoniker": "ViewModel\\FuncDefinitions.cs",
               "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\FuncDefinitions.cs",
               "RelativeToolTip": "ViewModel\\FuncDefinitions.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAAAwwNIAAAAlAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwNIAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-01T14:24:47.2Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "PartialMainWindow.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\PartialMainWindow.cs",
               "RelativeDocumentMoniker": "ViewModel\\PartialMainWindow.cs",
               "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\PartialMainWindow.cs",
               "RelativeToolTip": "ViewModel\\PartialMainWindow.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAFAAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAACsAAAAAAAAAAADgvzkAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-01T15:55:43.96Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "CoreManager.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\CoreManager.cs",
               "RelativeDocumentMoniker": "ViewModel\\CoreManager.cs",
               "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\CoreManager.cs",
               "RelativeToolTip": "ViewModel\\CoreManager.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAArwA0AAAALAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAIwBEAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-01T15:17:46.754Z"
+              "WhenOpened": "2025-06-01T15:17:46.754Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 6,
               "Title": "LexerError.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Errors\\LexerError.cs",
               "RelativeDocumentMoniker": "Core\\Errors\\LexerError.cs",
               "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Errors\\LexerError.cs",
               "RelativeToolTip": "Core\\Errors\\LexerError.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-01T15:16:39.676Z"
+              "WhenOpened": "2025-06-01T15:16:39.676Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "ParserError.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Errors\\ParserError.cs",
               "RelativeDocumentMoniker": "Core\\Errors\\ParserError.cs",
@@ -195,7 +214,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "IPaintable.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\IPaintable.cs",
               "RelativeDocumentMoniker": "ViewModel\\IPaintable.cs",
@@ -203,12 +222,11 @@
               "RelativeToolTip": "ViewModel\\IPaintable.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAAwAoAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-01T14:59:34.852Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-01T14:59:34.852Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "BlockInstructions.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Language\\Instructions\\BlockInstructions.cs",
               "RelativeDocumentMoniker": "Core\\Language\\Instructions\\BlockInstructions.cs",
@@ -220,20 +238,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "Lexer.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Model\\Lexer.cs",
               "RelativeDocumentMoniker": "Core\\Model\\Lexer.cs",
               "ToolTip": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Model\\Lexer.cs",
               "RelativeToolTip": "Core\\Model\\Lexer.cs",
-              "ViewState": "AgIAAIEAAAAAAAAAAAAcwI4AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAALcAAAAAAAAAAADgv8wAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-01T16:41:13.206Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "CanvasControler.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\CanvasControler.cs",
               "RelativeDocumentMoniker": "ViewModel\\CanvasControler.cs",
@@ -245,7 +263,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "InstructionFunc.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Language\\Instructions\\InstructionFunc.cs",
               "RelativeDocumentMoniker": "Core\\Language\\Instructions\\InstructionFunc.cs",
@@ -257,7 +275,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "DirectionsEnum.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\ViewModel\\DirectionsEnum.cs",
               "RelativeDocumentMoniker": "ViewModel\\DirectionsEnum.cs",
@@ -269,7 +287,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "SemanticErrors.cs",
               "DocumentMoniker": "C:\\Users\\josed\\OneDrive\\Desktop\\Wall-E JM\\Core\\Errors\\SemanticErrors.cs",
               "RelativeDocumentMoniker": "Core\\Errors\\SemanticErrors.cs",

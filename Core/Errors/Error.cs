@@ -17,7 +17,7 @@ public class Error : Exception, ILocation
 
     public override string ToString()
     {
-        return $"{Message}. Fila:{ErrorLocation.Row}, Columna:{ErrorLocation.StartCol}.";
+        return $"{Message}. Fila:{ErrorLocation.StartCol}, Columna:{ErrorLocation.Row}.";
     }
 }
 

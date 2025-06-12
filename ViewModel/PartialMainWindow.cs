@@ -41,6 +41,18 @@ namespace ViewModel
             for (int i = 0; i < CodeEditor.LineCount; i++)
             {
                 lines[i] = CodeEditor.GetLineText(i);
+
+                string input = lines[i];
+                string toRemove = " ";
+
+                int lastIndex = input.LastIndexOf(toRemove);
+                if (lastIndex != -1)
+                {
+                    string result = input.Remove(lastIndex, toRemove.Length);
+                    lines[i] = result;
+                }
+
+
             }
             return lines;
         }
@@ -121,7 +133,7 @@ namespace ViewModel
             }
         }
 
-       
+
 
     }
 }

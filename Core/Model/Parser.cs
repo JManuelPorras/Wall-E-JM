@@ -219,9 +219,10 @@ public class Parser
         if (!MatchToken(tokens, TokenType.Identificador) || !MatchToken(tokens, TokenType.ParentesisAbierto))
             return ResetIndex(startIndex, out num);
         if (!MatchParams(tokens, out string[] @params))
-        {
             return ResetIndex(startIndex, out num);
-        }
+        if (!MatchToken(tokens, TokenType.ParentesisCerrado))
+            return ResetIndex(startIndex, out num);
+
         Location location = new(tokens[startIndex].Row, tokens[startIndex].Col, tokens[tokenIndex].Col);
         num = new FunctionExp<int>(tokens[startIndex].Name, location, @params);
         return true;
@@ -231,9 +232,10 @@ public class Parser
         if (!MatchToken(tokens, TokenType.Identificador) || !MatchToken(tokens, TokenType.ParentesisAbierto))
             return ResetIndex(startIndex, out num);
         if (!MatchParams(tokens, out string[] @params))
-        {
             return ResetIndex(startIndex, out num);
-        }
+        if(!MatchToken(tokens, TokenType.ParentesisCerrado))
+            return ResetIndex(startIndex, out num);
+
         Location location = new(tokens[startIndex].Row, tokens[startIndex].Col, tokens[tokenIndex].Col);
         num = new InstructionFunc(tokens[startIndex].Name, location, @params);
         return true;
@@ -267,7 +269,6 @@ public class Parser
             parserErrors = AddParserError(tokens[tokenIndex].Row, tokens[tokenIndex].Col, tokens[tokenIndex].Col, a);
             ReturnFalse(out @params!);
         }
-        tokenIndex++;
         @params = list.ToArray();
         return true;
     }
