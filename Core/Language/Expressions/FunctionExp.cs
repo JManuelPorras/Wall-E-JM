@@ -26,7 +26,7 @@ public class FunctionExp<T> : Function, IExpression<T>, ICheckSemantic, ILocatio
 
     private bool MatchResult(object item3, out SemanticErrors resultError, Context context)
     {
-        if (item3.GetType() is not T)
+        if (!Equals(item3, typeof(T)))
         {
             resultError = new SemanticErrors("El tipo que devuelve la funcion no es el esperado", ErrorLocation);
             return false;

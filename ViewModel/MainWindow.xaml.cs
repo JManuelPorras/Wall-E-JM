@@ -50,7 +50,8 @@ namespace ViewModel
 
             actionDictionary = new()
                 {
-                    { "Spawn", (Portals.Portal<int, int>(funcDefinitions.Spawn), [typeof(int), typeof (int)]) },
+                    {"Spawn", (Portals.Portal<int, int>(funcDefinitions.Spawn), [typeof(int), typeof (int)]) },
+                    {"MoveWallee", (Portals.Portal<int, int>(funcDefinitions.MoveWallee), [typeof(int), typeof (int)]) },
                     {"Color", (Portals.Portal<string>(funcDefinitions.Color), [typeof(string)]) },
                     {"Size", (Portals.Portal<int>(funcDefinitions.Size), [typeof(int)]) },
                     {"DrawLine", (Portals.Portal<int,int,int>(funcDefinitions.DrawLine), [typeof(int), typeof(int), typeof(int)]) },
@@ -140,14 +141,14 @@ namespace ViewModel
         {
             try
             {
-                funcDefinitions = new FuncDefinitions(this);
                 ClearCanvas();
+                funcDefinitions = new FuncDefinitions(this);
                 string[] lines = GetLines();
 
                 var codemanager = new CoreManager(lines, funcDictionary, actionDictionary);
                 if (codemanager.errors != null)
                     ErrorLabel.Content = string.Join("\n", codemanager.errors);
-                codemanager.blockInstruction.Execute(codemanager.context);
+                codemanager.blockInstruction.Execute(codemanager.context); 
 
             }
             catch (Exception ex)
@@ -163,9 +164,9 @@ namespace ViewModel
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "GW Files (*.gw)|*.gw|All files (*.*)|*.*",
+            OpenFileDialog openFileDialog = new()
+            { 
+                Filter = "PW Files (*.pw)|*.pw|All files (*.*)|*.*",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
 
@@ -187,9 +188,9 @@ namespace ViewModel
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            SaveFileDialog saveFileDialog = new()
             {
-                Filter = "GW Files (*.gw)|*.gw|All files (*.*)|*.*",
+                Filter = "PW Files (*.pw)|*.pw|All files (*.*)|*.*",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
 

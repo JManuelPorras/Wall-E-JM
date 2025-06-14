@@ -73,14 +73,23 @@ public class Parser
 
         return new BlockInstruction(lines);
     }
-
     private bool GetLabel(Token[] tokens, out Label label)
     {
         int startIndex = tokenIndex;
-        if (!MatchToken(tokens, TokenType.Etiqueta, out string name))
-            return ResetIndex(startIndex, out label!);
-        label = new Label(name);
-        return true;
+
+        // Una etiqueta es simplemente un identificador seguido de EndOfLine o EndOfFile
+        if (MatchToken(tokens, TokenType.Identificador, out string name))
+        {
+            // Verificar que lo siguiente sea fin de línea o fin de archivo
+            if (tokenIndex < tokens.Length &&
+                (tokens[tokenIndex].Type == TokenType.EndOfLine || tokens[tokenIndex].Type == TokenType.EndOfFile))
+            {
+                label = new Label(name);
+                return true;
+            }
+        }
+
+        return ResetIndex(startIndex, out label!);
     }
 
     private bool GetGoToLine(Token[] tokens, out GoToInst goTo)
@@ -233,7 +242,7 @@ public class Parser
             return ResetIndex(startIndex, out num);
         if (!MatchParams(tokens, out string[] @params))
             return ResetIndex(startIndex, out num);
-        if(!MatchToken(tokens, TokenType.ParentesisCerrado))
+        if (!MatchToken(tokens, TokenType.ParentesisCerrado))
             return ResetIndex(startIndex, out num);
 
         Location location = new(tokens[startIndex].Row, tokens[startIndex].Col, tokens[tokenIndex].Col);

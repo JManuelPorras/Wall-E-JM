@@ -24,7 +24,7 @@ public static class Portals
         return (PortalFunc, types);
     }
 
-    public static Func Portal<T1, T2, T3>( Func<T1, T2, T3> call) => 
+    public static Func Portal<T1, T2, T3>(Func<T1, T2, T3> call) =>
         (@params) =>
     {
         if (@params.Length != 2)

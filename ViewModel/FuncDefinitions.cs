@@ -11,7 +11,7 @@ namespace ViewModel
     public class FuncDefinitions
     {
         private IPaintable _paintable;
-        private bool OnlyOneSpawn = true;
+
 
         public FuncDefinitions(IPaintable paintable)
         {
@@ -20,12 +20,18 @@ namespace ViewModel
 
         public void Spawn(int x, int y)
         {
-            if (!OnlyOneSpawn)
+            if (!_paintable.OnlyOneSpawn)
             {
                 throw new Exception("Wallee ya esta posicionado");
             }
             _paintable.PaintWallee(x, y);
-            OnlyOneSpawn = false;
+            _paintable.OnlyOneSpawn = false;
+        }
+
+        public void MoveWallee(int x, int y)
+        {
+            _paintable.XWalleePosition = x;
+            _paintable.YWalleePosition = y;
         }
 
         public void Color(string color)
@@ -47,7 +53,7 @@ namespace ViewModel
                         _paintable.PixelColor = Brushes.Green;
                         break;
                     }
-                case "Yelow":
+                case "Yellow":
                     {
                         _paintable.PixelColor = Brushes.Yellow;
                         break;
@@ -90,7 +96,6 @@ namespace ViewModel
                 _paintable.BrushSize = brushSize;
             else throw new Exception("La dimension de pincel no es valida");
         }
-
         public void DrawLine(int dirX, int dirY, int distance)
         {
             if (!ValidDir(dirX, dirY))
@@ -98,14 +103,21 @@ namespace ViewModel
 
             if (distance < 0) throw new Exception("La distancia no puede ser negativa");
 
+            // Obtener la posición actual de Wall-E
+            int startX = GetActualX();
+            int startY = GetActualY();
+
             for (int i = 1; i <= distance; i++)
             {
-                var currentX = dirX * i;
-                var currentY = dirY * i;
+                var currentX = startX + dirX * i;
+                var currentY = startY + dirY * i;
                 _paintable.SetPixelColor(currentX, currentY);
-                _paintable.PaintWallee(dirX * (i + 1), dirY * (i + 1));
             }
 
+            // Mover Wall-E a la posición final
+            var finalX = startX + dirX * distance;
+            var finalY = startY + dirY * distance;
+            _paintable.PaintWallee(finalX, finalY);
         }
 
         private bool ValidDir(int dirX, int dirY)
@@ -138,26 +150,40 @@ namespace ViewModel
 
             for (int i = limLeft; i <= limRight; i++)
             {
-                _paintable.SetPixelColor(limDown, i);
-                _paintable.SetPixelColor(limUp, i);
+                if (_paintable.IsValidPosition(limDown, i))
+                    _paintable.SetPixelColor(limDown, i);
+                if (_paintable.IsValidPosition(limUp, i))
+                    _paintable.SetPixelColor(limUp, i);
             }
 
             for (int i = limUp; i <= limDown; i++)
             {
-                _paintable.SetPixelColor(i, limLeft);
-                _paintable.SetPixelColor(i, limRight);
+                if (_paintable.IsValidPosition(limLeft, i))
+                    _paintable.SetPixelColor(i, limLeft);
+                if (_paintable.IsValidPosition(limRight, i))
+                    _paintable.SetPixelColor(i, limRight);
             }
         }
-
         public void Fill()
         {
             var actualSize = _paintable.BrushSize;
             _paintable.BrushSize = 1;
             (int, int) InitialPos = (_paintable.XWalleePosition, _paintable.YWalleePosition);
-            Queue<(int, int)> values = new Queue<(int, int)>();
+
+            // Validar que la posición inicial esté dentro de los límites
+            if (!_paintable.IsValidPosition(InitialPos.Item1, InitialPos.Item2))
+                return;
+
+            Queue<(int, int)> values = [];
+            HashSet<(int, int)> visited = [];
             values.Enqueue(InitialPos);
+            visited.Add(InitialPos);
+
             bool anyElement = true;
             var actualColor = _paintable.PixelColor;
+
+            var targetColor = _paintable.RectangMatrix![InitialPos.Item1, InitialPos.Item2].Fill;
+
 
             while (anyElement)
             {
@@ -168,8 +194,12 @@ namespace ViewModel
                 {
                     int nx = _paintable.Directions[i].Item1 + firstItem.Item1;
                     int ny = _paintable.Directions[i].Item2 + firstItem.Item2;
-                    if (IsValidItem(nx, ny, actualColor))
+                    var next = (nx, ny);
+                    if (IsValidItem(nx, ny, targetColor) && !visited.Contains(next))
+                    {
+                        visited.Add(next);
                         values.Enqueue((nx, ny));
+                    }
 
                 }
                 anyElement = values.Any();
@@ -180,7 +210,7 @@ namespace ViewModel
 
         private bool IsValidItem(int nx, int ny, Brush actualColor)
         {
-            if (_paintable.RectangMatrix![nx, ny].Fill != actualColor || !_paintable.IsValidPosition(nx, ny))
+            if (!_paintable.IsValidPosition(nx, ny) || _paintable.RectangMatrix![nx, ny].Fill != actualColor)
                 return false;
             return true;
         }
@@ -199,7 +229,6 @@ namespace ViewModel
 
             DrawCircle1(radius, currentX, currentY);
         }
-
         private void DrawCircle1(int radius, int centerX, int centerY)
         {
             int x = radius;
@@ -210,12 +239,12 @@ namespace ViewModel
             {
                 _paintable.SetPixelColor(centerX + x, centerY + y);
                 _paintable.SetPixelColor(centerX - x, centerY + y);
-                _paintable.SetPixelColor(centerX + x, centerX - y);
-                _paintable.SetPixelColor(centerX - x, centerX - y);
-                _paintable.SetPixelColor(centerX + y, centerX + x);
-                _paintable.SetPixelColor(centerX - y, centerX + x);
-                _paintable.SetPixelColor(centerX + y, centerX - x);
-                _paintable.SetPixelColor(centerX - y, centerX - x);
+                _paintable.SetPixelColor(centerX + x, centerY - y);
+                _paintable.SetPixelColor(centerX - x, centerY - y);
+                _paintable.SetPixelColor(centerX + y, centerY + x);
+                _paintable.SetPixelColor(centerX - y, centerY + x);
+                _paintable.SetPixelColor(centerX + y, centerY - x);
+                _paintable.SetPixelColor(centerX - y, centerY - x);
 
                 y++;
                 if (d < 0)

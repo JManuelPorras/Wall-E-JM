@@ -21,14 +21,14 @@ public class AssignInstruction<T> : IInstruction, ICheckSemantic
 
     public IEnumerable<SemanticErrors>? CheckSemantic(Context context)
     {
+        if (!context.Variables.ContainsKey(Name))
+            context.Variables.Add(Name, default(T)!);
+        else context.Variables[Name] = default(T)!;
         var a = Value.CheckSemantic(context)!;
         if (a != null)
         {
             foreach (var item in a)
                 yield return item;
         }
-        if (!context.Variables.ContainsKey(Name))
-            context.Variables.Add(Name, default(T)!);
-        else context.Variables[Name] = default(T)!;
     }
 }

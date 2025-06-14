@@ -22,8 +22,8 @@
             <TextBox x:Name="CanvasSizeTextBox" Width="50" Text="{Binding CellSize}" Margin="5,0" MaxLength="3"/>
             <!--<Button x:Name="ResizeButton" Content="Resize Canvas" Width="100" Margin="5,0" Click="ResizeButton_Click"/>-->
             <Button x:Name="RunButton" Content="Run Code" Width="80" Margin="5,0" Click="RunButton_Click"/>
-            <Button x:Name="LoadButton" Content="Load (.gw)" Width="80" Margin="5,0" Click="LoadButton_Click"/>
-            <Button x:Name="SaveButton" Content="Save (.gw)" Width="80" Margin="5,0" Click="SaveButton_Click"/>
+            <Button x:Name="LoadButton" Content="Load (.pw)" Width="80" Margin="5,0" Click="LoadButton_Click"/>
+            <Button x:Name="SaveButton" Content="Save (.pw)" Width="80" Margin="5,0" Click="SaveButton_Click"/>
         </StackPanel>
 
         <!-- Contenedor principal -->

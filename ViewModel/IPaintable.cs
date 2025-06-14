@@ -20,6 +20,7 @@ namespace ViewModel
         public bool IsValidPosition(int x, int y);
         public Rectangle[,]? RectangMatrix { get; }
         public int gridSize { get; }
+        public bool OnlyOneSpawn {get; set;}
        
     }
 }

@@ -90,7 +90,7 @@ namespace ViewModel
             YWalleePosition = -1;
             CanvasGrid.Children.Remove(wallee);
             OnlyOneSpawn = true;
-            PixelColor = default!;
+            PixelColor = default!; 
             BrushSize = 1;
         }
 
